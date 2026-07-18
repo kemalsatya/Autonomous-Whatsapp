@@ -1,8 +1,8 @@
-import { client } from "./whatsapp.client";
-import { helpReplyText } from "./text.helper";
+import { client } from "./whatsapp.client.js";
+import { helpReplyText } from "./text.helper.js";
 
 export const registerMessageHandler = () => {
-  client.on("message", async (message) => {
+  client.on("message_create", async (message) => {
     const messageBody = message.body.trim().toLowerCase();
     const messageInstruction = messageBody.split(" ")[0];
 
@@ -45,6 +45,10 @@ export const registerMessageHandler = () => {
               }
               */
         break;
+      case "logout":
+        await message.reply("Logging out...");
+        await client.logout();
+        break;
       // case "hapus":
       //  break;
       // case "laporan":
@@ -55,4 +59,6 @@ export const registerMessageHandler = () => {
   });
 
   client.on("message_edit", async (_message) => {});
+
+  client.on("disconnected", (reason) => console.log(reason));
 };

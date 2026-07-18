@@ -1,6 +1,6 @@
-import { Client, LocalAuth } from "whatsapp-web.js";
-import { qrcode } from "qrcode-terminal";
-import { registerMessageHandler } from "./whatsapp.controller";
+import wwebjs from "whatsapp-web.js";
+const { Client, LocalAuth } = wwebjs;
+import QRCode from "qrcode";
 
 export const client = new Client({
   authStrategy: new LocalAuth({
@@ -22,10 +22,9 @@ export const client = new Client({
 });
 
 export const initializeWhatsApp = async () => {
-  registerMessageHandler();
-
-  client.on("qr", (qr) => {
-    qrcode.generate(qr, { small: true });
+  client.on("qr", async (qr) => {
+    const qrString = await QRCode.toString(qr, { type: "terminal", scale: 1 });
+    console.log(qrString);
   });
 
   client.on("authenticated", () => console.log("di scan..."));
