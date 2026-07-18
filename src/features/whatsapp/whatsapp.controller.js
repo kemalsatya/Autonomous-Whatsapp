@@ -16,6 +16,12 @@ client.on("message", async (message) => {
         "project":"project"
       }
       */
+
+      /* kirim data ke neondb
+       */
+
+      /* kirim data ke app script
+       */
       break;
     case "daftar":
       /* kirim ke genai untuk parse data jadi json seperti ini:
@@ -47,4 +53,4 @@ client.on("message", async (message) => {
   }
 });
 
-client.on("message_edit", async (message) => {});
+client.on("message_edit", async (_message) => {});
