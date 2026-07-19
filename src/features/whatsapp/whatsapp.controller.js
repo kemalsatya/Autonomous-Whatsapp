@@ -1,10 +1,13 @@
 import { client } from "./whatsapp.client.js";
 import { helpReplyText } from "./text.helper.js";
+import { processInitiateProject } from "./whatsapp.service.js";
+import { initializeNeonDb } from "../neondb/neondb.client.js";
 
 export const registerMessageHandler = () => {
   client.on("message_create", async (message) => {
     const messageBody = message.body.trim().toLowerCase();
     const messageInstruction = messageBody.split(" ")[0];
+    const originalBody = message.body.trim();
 
     switch (messageInstruction) {
       case "help":
@@ -12,17 +15,17 @@ export const registerMessageHandler = () => {
         break;
       case "inisiasi":
         /* kirim ke genai untuk parse data jadi json seperti ini:
-        {
-          "client":"nama client"
-          "project":"project"
-          }
-          */
-
-        /* kirim data ke neondb
+         /* kirim data ke app script
          */
-
-        /* kirim data ke app script
-         */
+        initializeNeonDb();
+        const isSuccess = await processInitiateProject(originalBody);
+        if (isSuccess) {
+          console.log("log: Initiate Success");
+          message.reply("Initiate Success");
+        } else {
+          console.log("log: Gagal memproses inisiasi. Cek format pesan.");
+          message.reply("Gagal memproses inisiasi. Cek format pesan.");
+        }
         break;
       case "daftar":
         /* kirim ke genai untuk parse data jadi json seperti ini:

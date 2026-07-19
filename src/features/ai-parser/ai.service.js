@@ -14,7 +14,7 @@ export const parseMessageToJSON = async (pesanMasuk, _instruksi) => {
         },
         {
           role: "user",
-          content: pesanMasuk + _instruksi,
+          content: `${pesanMasuk}\n\n---\n${_instruksi}`,
         },
       ],
       model: "llama-3.1-8b-instant",
