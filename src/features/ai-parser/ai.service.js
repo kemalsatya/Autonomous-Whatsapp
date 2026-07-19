@@ -11,24 +11,9 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
  *
  * _instruksi = instructionOption (gemini.prompt.js)
  * _instruksiResponse = projectResponseSchema (gemini.schema.js)
+ * 
+ * return JSON
  */
-// export const processWhatsAppMessage = async (
-//   pesanMasuk,
-//   _instruksi,
-//   _instruksiResponse,
-// ) => {
-//   const response = await ai.models.generateContent({
-//     model: aiModel,
-//     contents: _instruksi + "\n\nPesan: " + pesanMasuk,
-//     config: {
-//       systemInstruction: customSystemInstruction,
-//       responseMimeType: "application/json",
-//       responseSchema: _instruksiResponse,
-//     },
-//   });
-//   return JSON.parse(response.text);
-// };
-
 export const parseMessageToJSON = async (pesanMasuk, _instruksi) => {
   try {
     const completion = await groq.chat.completions.create({
