@@ -4,12 +4,6 @@ import { customSystemInstruction } from "./ai.prompt.js";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-/**
- * Memperoses pesan whatsapp dan mengirimnya ke gemini ai studio untuk diparse
- *
- * _instruksi = instructionOption (gemini.prompt.js)
- * _instruksiResponse = projectResponseSchema (gemini.schema.js)
- */
 export const parseMessageToJSON = async (pesanMasuk, _instruksi) => {
   try {
     const completion = await groq.chat.completions.create({
