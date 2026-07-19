@@ -1,7 +1,27 @@
 import { parseMessageToJSON } from "../ai-parser/ai.service.js";
 import { instructionOption } from "../ai-parser/ai.prompt.js";
+import { sql } from "../neondb/neondb.client.js";
 
-export const processInitiateProject = (pesanMasuk) => {
-    const projectData = parseMessageToJSON(pesanMasuk, instructionOption.initiateInstruction)
-    
-}
+export const processInitiateProject = async (pesanMasuk) => {
+  try {
+    const projectData = await parseMessageToJSON(
+      pesanMasuk,
+      instructionOption.initiateInstruction,
+    );
+    console.log("log:\n\n[processInitiateProject] parsed data:", projectData);
+    const insertToDb = await sql`
+                              insert into project_spreadsheet
+                              (nama_client, nama_project, spreadsheet_id)
+                              values (${projectData.client}, ${projectData.project}, ${projectData.spreadsheet_id})
+                              returning id`;
+    if (insertToDb) {
+      console.log("Process Initiate Spreadsheet Project Success");
+    }
+    return true;
+  } catch (error) {
+    console.error(
+      "log: error in processInitiateProject - whatsapp.service:\n" + error,
+    );
+    return false;
+  }
+};
