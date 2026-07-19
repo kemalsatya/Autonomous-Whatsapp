@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import { initializeWhatsApp } from "./features/whatsapp/whatsapp.client.js";
 import { registerMessageHandler } from "./features/whatsapp/whatsapp.controller.js";
+import { initializeGeminiStudio } from "./features/ai-parser/gemini.service.js";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  registerMessageHandler();
-  initializeWhatsApp();
+  // registerMessageHandler();
+  // initializeWhatsApp();
+  initializeGeminiStudio();
 });

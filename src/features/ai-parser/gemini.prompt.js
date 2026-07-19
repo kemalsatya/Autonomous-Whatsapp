@@ -3,6 +3,7 @@ You are a data parsing API. Your job is extracting data from a text message then
 `;
 
 export const instructionOption = {
+  initGeminiInstruction: "You are a health check API. Only give answer using HTTP code, use 200 as true",
   initiateInstruction:
     "Extract the client and project details from the message",
 };

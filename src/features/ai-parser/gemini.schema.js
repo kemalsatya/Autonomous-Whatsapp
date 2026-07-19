@@ -1,6 +1,15 @@
 import { Type } from "@google/genai";
 
 export const projectResponseSchema = {
+  initGeminiSchema: {
+    type: Type.OBJECT,
+    properties: {
+      status: {
+        type: Type.INTEGER,
+        description: "HTTP status code",
+      },
+    },
+  },
   initiateSchema: {
     type: Type.OBJECT,
     properties: {
