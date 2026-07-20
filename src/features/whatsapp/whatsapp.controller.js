@@ -14,9 +14,10 @@ export const registerMessageHandler = () => {
         message.reply(helpReplyText);
         break;
       case "inisiasi":
-        /* kirim ke genai untuk parse data jadi json seperti ini:
-         /* kirim data ke app script
-         */
+        // parsing data dari groq [BERHASIL]
+        // kirim data + spreadsheet id ke neondb [BERHASIL]
+        // axios post ke app script** [BELUM]
+        // ** membuat duplikat folder dan docs
         initializeNeonDb();
         const isSuccess = await processInitiateProject(originalBody);
         if (isSuccess) {
