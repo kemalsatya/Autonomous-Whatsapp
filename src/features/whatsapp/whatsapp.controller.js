@@ -28,19 +28,19 @@ export const registerMessageHandler = () => {
             let fromAppScript = await sendToAppScript(data);
             if (fromAppScript) {
               message.reply(`Initiate Project Success
-                success: true
-                client: ${data.client}
-                project: ${data.project},
-                ss id: ${data.spreadsheet_id}`);
+  success: true
+  client: ${data.client}
+  project: ${data.project},
+  ss id: ${data.spreadsheet_id}`);
             }
           } catch (error) {
             message.reply(`Initiate Project Fail`);
-            console.error("Log: Error inisiasi:\n", error.message);
+            console.error("[LOG] Error inisiasi:\n", error.message);
           }
         }
 
         if (status && !isDoc) {
-          console.log("log: Initiate Project Success");
+          console.log("[LOG] Initiate Project Success");
           message.reply("Initiate Success");
         }
         break;

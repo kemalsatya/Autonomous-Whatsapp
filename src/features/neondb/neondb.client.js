@@ -7,9 +7,9 @@ export const initializeNeonDb = async () => {
   try {
     const response = await sql`SELECT 1`;
     if (response) {
-      console.log("NeonDb service is ready to go!");
+      console.log("[LOG] NeonDb service is ready to go!");
     }
   } catch (error) {
-    console.error("NeonDb service is not ready to go:\n" + error.message);
+    console.error("[LOG] NeonDb service is not ready to go:\n" + error.message);
   }
 };

@@ -18,6 +18,7 @@ export const client = new Client({
       "--disable-gpu",
       "--disable-blink-features=AutomationControlled",
     ],
+    webVersionCache: { type: "none" },
   },
 });
 

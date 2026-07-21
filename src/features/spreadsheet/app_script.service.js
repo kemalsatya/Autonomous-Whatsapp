@@ -13,14 +13,14 @@ export const sendToAppScript = async (data) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Log: HTTP error, status: ${response.status}`);
+      throw new Error(`[LOG] HTTP error, status: ${response.status}`);
     }
 
     const responseData = await response.json();
     if (responseData.status === "success") {
       return data;
     } else {
-      throw new Error("error di sendToAppScript: ", responseData.message);
+      throw new Error("[LOG] error di sendToAppScript: ", responseData.message);
     }
   } catch (error) {
     console.error(error.message);
