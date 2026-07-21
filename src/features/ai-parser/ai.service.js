@@ -25,7 +25,7 @@ export const parseMessageToJSON = async (pesanMasuk, _instruksi) => {
     const rawResponse = completion.choices[0].message.content;
     return JSON.parse(rawResponse);
   } catch (error) {
-    console.error("log: error on groq parser: ", error);
+    console.error("[LOG] error on groq parser: ", error);
     throw error;
   }
 };
@@ -38,9 +38,10 @@ export const initializeAiParserService = async () => {
       max_completion_tokens: 5,
     });
 
-    console.log("Groq Ai: ", ping.choices[0].message.content);
-    console.log("Groq parser service is ready to go!");
+    if (ping.choices[0].message.content){
+      console.log("[LOG] Groq parser service is ready to go!");
+    }
   } catch (error) {
-    console.log("Groq parser service is not ready to go:\n", error.message);
+    console.log("[LOG] Groq parser service is not ready to go:\n", error.message);
   }
 };
