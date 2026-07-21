@@ -13,11 +13,12 @@ export const processInitiateProject = async (pesanMasuk) => {
                               insert into project_spreadsheet
                               (nama_client, nama_project, spreadsheet_id)
                               values (${projectData.client}, ${projectData.project}, ${projectData.spreadsheet_id})
-                              returning id`;
+                              `;
     if (insertToDb) {
       console.log("Process Initiate Spreadsheet Project Success");
     }
-    return true;
+    const dataReturn = { status: true, data: projectData };
+    return dataReturn;
   } catch (error) {
     console.error(
       "log: error in processInitiateProject - whatsapp.service:\n" + error,

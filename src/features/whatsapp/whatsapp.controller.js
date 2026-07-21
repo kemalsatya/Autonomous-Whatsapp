@@ -2,6 +2,7 @@ import { client } from "./whatsapp.client.js";
 import { helpReplyText } from "./text.helper.js";
 import { processInitiateProject } from "./whatsapp.service.js";
 import { initializeNeonDb } from "../neondb/neondb.client.js";
+import { sendToAppScript } from "../spreadsheet/app_script.service.js";
 
 export const registerMessageHandler = () => {
   client.on("message_create", async (message) => {
@@ -19,13 +20,28 @@ export const registerMessageHandler = () => {
         // axios post ke app script** [BELUM]
         // ** membuat duplikat folder dan docs
         initializeNeonDb();
-        const isSuccess = await processInitiateProject(originalBody);
-        if (isSuccess) {
-          console.log("log: Initiate Success");
+        const { status, data } = await processInitiateProject(originalBody);
+
+        const isDoc = messageBody.includes("doc");
+        if (isDoc) {
+          try {
+            let fromAppScript = await sendToAppScript(data);
+            if (fromAppScript) {
+              message.reply(`Initiate Project Success
+                success: true
+                client: ${data.client}
+                project: ${data.project},
+                ss id: ${data.spreadsheet_id}`);
+            }
+          } catch (error) {
+            message.reply(`Initiate Project Fail`);
+            console.error("Log: Error inisiasi:\n", error.message);
+          }
+        }
+
+        if (status && !isDoc) {
+          console.log("log: Initiate Project Success");
           message.reply("Initiate Success");
-        } else {
-          console.log("log: Gagal memproses inisiasi. Cek format pesan.");
-          message.reply("Gagal memproses inisiasi. Cek format pesan.");
         }
         break;
       case "daftar":
