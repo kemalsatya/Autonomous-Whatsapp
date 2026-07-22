@@ -9,4 +9,16 @@ Extract the data from the message above and output a JSON object using EXACTLY t
   "spreadsheet_id": "string or null"
 }
 Do not add any extra fields, comments, or explanation. Output only the JSON object.`,
+  registerInstruction: `
+Extraxt the data from the message above and outpus a JSON object using EXACTYLY this structure:
+{
+"nama": "string or null",
+"kelompok": "string or null",
+"jenis_kelamin": "string or null"
+rules:
+- value for "nama" is always pascal case
+- value for "kelompok" is one of this ["TMII 1", "TMII 2","G1","G2"]
+- value for "jenis_kelamin" is either L (for men/laki-laki) or P (for women/perempuan)
+Do not add any extra fields, comments, or explanation. Output only the JSON object.
+}.`,
 };

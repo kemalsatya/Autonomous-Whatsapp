@@ -1,6 +1,7 @@
-import { parseMessageToJSON } from "../ai-parser/ai.service.js";
-import { instructionOption } from "../ai-parser/ai.prompt.js";
-import { sql } from "../neondb/neondb.client.js";
+import { parseMessageToJSON } from "#@/ai-parser/ai.service.js";
+// import { instructionOption } from "#@/ai-parser/ai.prompt.js";
+import { instructionOption } from "#@/ai-parser/ai.prompt.js";
+import { sql } from "#@/neondb/neondb.client.js";
 
 export const processInitiateProject = async (pesanMasuk) => {
   try {
@@ -23,6 +24,6 @@ export const processInitiateProject = async (pesanMasuk) => {
     console.error(
       "[LOG] error in processInitiateProject - whatsapp.service:\n" + error,
     );
-    return false;
+    return { status: false, data: null };
   }
 };

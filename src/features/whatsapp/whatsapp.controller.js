@@ -1,24 +1,22 @@
 import { client } from "./whatsapp.client.js";
 import { helpReplyText } from "./text.helper.js";
 import { processInitiateProject } from "./whatsapp.service.js";
-import { initializeNeonDb } from "../neondb/neondb.client.js";
-import { sendToAppScript } from "../spreadsheet/app_script.service.js";
+import { initializeNeonDb } from "#@/neondb/neondb.client.js";
+import { sendToAppScript } from "#@/appscript/app_script.service.js";
+import { instructionOption } from "../ai-parser/ai.prompt.js";
+import { parseMessageToJSON } from "../ai-parser/ai.service.js";
 
 export const registerMessageHandler = () => {
   client.on("message_create", async (message) => {
-    const messageBody = message.body.trim().toLowerCase();
-    const messageInstruction = messageBody.split(" ")[0];
     const originalBody = message.body.trim();
+    const messageBody = originalBody.toLowerCase();
+    const messageInstruction = messageBody.split(" ")[0];
 
     switch (messageInstruction) {
       case "help":
         message.reply(helpReplyText);
         break;
       case "inisiasi":
-        // parsing data dari groq [BERHASIL]
-        // kirim data + spreadsheet id ke neondb [BERHASIL]
-        // axios post ke app script** [BELUM]
-        // ** membuat duplikat folder dan docs
         initializeNeonDb();
         const { status, data } = await processInitiateProject(originalBody);
 
@@ -47,9 +45,19 @@ export const registerMessageHandler = () => {
       case "daftar":
         /* kirim ke genai untuk parse data jadi json seperti ini:
          {
-          ["nama person", "kelompok", "jenis kelamin"]
+          ["nama", "kelompok", "jenis kelamin"]
           }
           */
+        try {
+          const personData = await parseMessageToJSON(
+            originalBody,
+            instructionOption.registerInstruction,
+          );
+          console.log("log:\n\nparsed person data:", personData);
+        } catch (error) {
+          console.error("[LOG] Error register person:\n", error.message);
+        }
+
         break;
       case "tambah":
         /* kirim ke genai untuk parse data jadi json seperti ini:

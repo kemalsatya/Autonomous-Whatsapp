@@ -9,6 +9,9 @@
     "lint": "eslint .",
     "prepare": "husky"
   },
+  "imports": {
+    
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

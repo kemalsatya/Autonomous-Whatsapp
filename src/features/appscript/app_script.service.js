@@ -18,7 +18,7 @@ export const sendToAppScript = async (data) => {
 
     const responseData = await response.json();
     if (responseData.status === "success") {
-      return data;
+      return true;
     } else {
       throw new Error("[LOG] error di sendToAppScript: ", responseData.message);
     }
