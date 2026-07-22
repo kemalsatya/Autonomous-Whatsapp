@@ -1,14 +1,14 @@
 import { client } from "./whatsapp.client.js";
 import { helpReplyText } from "./text.helper.js";
 import { processInitiateProject } from "./whatsapp.service.js";
-import { initializeNeonDb } from "../neondb/neondb.client.js";
-import { sendToAppScript } from "../spreadsheet/app_script.service.js";
+import { initializeNeonDb } from "#@/neondb/neondb.client.js";
+import { sendToAppScript } from "#@/appscript/app_script.service.js";
 
 export const registerMessageHandler = () => {
   client.on("message_create", async (message) => {
-    const messageBody = message.body.trim().toLowerCase();
-    const messageInstruction = messageBody.split(" ")[0];
     const originalBody = message.body.trim();
+    const messageBody = originalBody.toLowerCase();
+    const messageInstruction = messageBody.split(" ")[0];
 
     switch (messageInstruction) {
       case "help":

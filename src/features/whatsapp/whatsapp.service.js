@@ -1,6 +1,6 @@
-import { parseMessageToJSON } from "../ai-parser/ai.service.js";
-import { instructionOption } from "../ai-parser/ai.prompt.js";
-import { sql } from "../neondb/neondb.client.js";
+import { parseMessageToJSON } from "#@/ai-parser/ai.service.js";
+import { instructionOption } from "#@/ai-parser/ai.prompt.js";
+import { sql } from "#@/neondb/neondb.client.js";
 
 export const processInitiateProject = async (pesanMasuk) => {
   try {
