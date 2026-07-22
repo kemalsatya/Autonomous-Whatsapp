@@ -1,5 +1,4 @@
 import { parseMessageToJSON } from "#@/ai-parser/ai.service.js";
-// import { instructionOption } from "#@/ai-parser/ai.prompt.js";
 import { instructionOption } from "#@/ai-parser/ai.prompt.js";
 import { sql } from "#@/neondb/neondb.client.js";
 

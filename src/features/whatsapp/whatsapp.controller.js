@@ -3,8 +3,8 @@ import { helpReplyText } from "./text.helper.js";
 import { processInitiateProject } from "./whatsapp.service.js";
 import { initializeNeonDb } from "#@/neondb/neondb.client.js";
 import { sendToAppScript } from "#@/appscript/app_script.service.js";
-import { instructionOption } from "../ai-parser/ai.prompt.js";
-import { parseMessageToJSON } from "../ai-parser/ai.service.js";
+import { instructionOption } from "#@/ai-parser/ai.prompt.js";
+import { parseMessageToJSON } from "#@/ai-parser/ai.service.js";
 
 export const registerMessageHandler = () => {
   client.on("message_create", async (message) => {

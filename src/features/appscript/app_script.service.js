@@ -20,7 +20,9 @@ export const sendToAppScript = async (data) => {
     if (responseData.status === "success") {
       return true;
     } else {
-      throw new Error("[LOG] error di sendToAppScript: ", responseData.message);
+      throw new Error(
+        `[LOG] error di sendToAppScript: ${responseData.message}`,
+      );
     }
   } catch (error) {
     console.error(error.message);
