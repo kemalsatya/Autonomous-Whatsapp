@@ -16,8 +16,8 @@ Extraxt the data from the message above and outpus a JSON object using EXACTYLY 
 "kelompok": "string or null",
 "jenis_kelamin": "string or null"
 rules:
-- value for "nama" is always pascal case
-- value for "kelompok" is one of this ["TMII 1", "TMII 2","G1","G2"]
+- value for "nama" is always pascal case with adding space between each word and without remove any word,letter,or number
+- value for "kelompok" is one of this ["TMII 1", "TMII 2","G1","G2"] (taman mini -> TMII, gamprit -> G)
 - value for "jenis_kelamin" is either L (for men/laki-laki) or P (for women/perempuan)
 Do not add any extra fields, comments, or explanation. Output only the JSON object.
 }.`,
