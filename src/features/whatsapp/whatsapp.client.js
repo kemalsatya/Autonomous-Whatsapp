@@ -9,6 +9,11 @@ export const client = new Client({
   }),
   puppeteer: {
     headless: true,
+    executablePath:
+      process.env.PUPPETEER_EXECUTABLE_PATH ||
+      (process.platform === "win32"
+        ? "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+        : undefined),
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -28,9 +33,9 @@ export const initializeWhatsApp = async () => {
     console.log(qrString);
   });
 
-  client.on("authenticated", () => console.log("di scan..."));
+  client.on("authenticated", () => console.log("[LOG] QR di scan..."));
 
-  client.on("ready", () => console.log("WhatsApp service ready to go!"));
+  client.on("ready", () => console.log("[LOG] WhatsApp service ready to go!"));
 
   client.initialize();
 };

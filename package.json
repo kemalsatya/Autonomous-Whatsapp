@@ -4,10 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "start": "node src/index.js",
     "lint": "eslint .",
     "prepare": "husky"
+  },
+  "imports": {
+    "#@/*": "./src/features/*"
   },
   "keywords": [],
   "author": "",
@@ -27,7 +31,8 @@
     "eslint-plugin-import-x": "^4.17.1",
     "globals": "^17.7.0",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.8"
+    "lint-staged": "^17.0.8",
+    "vitest": "^4.1.10"
   },
   "lint-staged": {
     "*.js": "eslint"

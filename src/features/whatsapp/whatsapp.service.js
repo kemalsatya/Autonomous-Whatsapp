@@ -1,6 +1,6 @@
-import { parseMessageToJSON } from "../ai-parser/ai.service.js";
-import { instructionOption } from "../ai-parser/ai.prompt.js";
-import { sql } from "../neondb/neondb.client.js";
+import { parseMessageToJSON } from "#@/ai-parser/ai.service.js";
+import { instructionOption } from "#@/ai-parser/ai.prompt.js";
+import { sql } from "#@/neondb/neondb.client.js";
 
 export const processInitiateProject = async (pesanMasuk) => {
   try {
@@ -15,7 +15,7 @@ export const processInitiateProject = async (pesanMasuk) => {
                               values (${projectData.client}, ${projectData.project}, ${projectData.spreadsheet_id})
                               `;
     if (insertToDb) {
-      console.log("[LOG] Process Initiate Spreadsheet Project Success");
+      console.log("[LOG] Initiate Spreadsheet Project to NeonDb Success");
     }
     const dataReturn = { status: true, data: projectData };
     return dataReturn;
@@ -23,6 +23,6 @@ export const processInitiateProject = async (pesanMasuk) => {
     console.error(
       "[LOG] error in processInitiateProject - whatsapp.service:\n" + error,
     );
-    return false;
+    return { status: false, data: null };
   }
 };

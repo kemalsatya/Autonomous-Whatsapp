@@ -1,31 +1,38 @@
 import { client } from "./whatsapp.client.js";
 import { helpReplyText } from "./text.helper.js";
 import { processInitiateProject } from "./whatsapp.service.js";
-import { initializeNeonDb } from "../neondb/neondb.client.js";
-import { sendToAppScript } from "../spreadsheet/app_script.service.js";
+import { initializeNeonDb } from "#@/neondb/neondb.client.js";
+import {
+  appScriptInstruction,
+  sendToAppScript,
+} from "#@/appscript/app_script.service.js";
+import { instructionOption } from "#@/ai-parser/ai.prompt.js";
+import { parseMessageToJSON } from "#@/ai-parser/ai.service.js";
 
 export const registerMessageHandler = () => {
   client.on("message_create", async (message) => {
-    const messageBody = message.body.trim().toLowerCase();
-    const messageInstruction = messageBody.split(" ")[0];
+    if (!message.fromMe) {
+      return;
+    }
     const originalBody = message.body.trim();
+    const messageBody = originalBody.toLowerCase();
+    const messageInstruction = messageBody.split(/\s+/)[0];
 
     switch (messageInstruction) {
       case "help":
         message.reply(helpReplyText);
         break;
       case "inisiasi":
-        // parsing data dari groq [BERHASIL]
-        // kirim data + spreadsheet id ke neondb [BERHASIL]
-        // axios post ke app script** [BELUM]
-        // ** membuat duplikat folder dan docs
         initializeNeonDb();
         const { status, data } = await processInitiateProject(originalBody);
 
         const isDoc = messageBody.includes("doc");
         if (isDoc) {
           try {
-            let fromAppScript = await sendToAppScript(data);
+            const fromAppScript = await sendToAppScript(
+              data,
+              appScriptInstruction.initiate,
+            );
             if (fromAppScript) {
               message.reply(`Initiate Project Success
   success: true
@@ -45,11 +52,24 @@ export const registerMessageHandler = () => {
         }
         break;
       case "daftar":
-        /* kirim ke genai untuk parse data jadi json seperti ini:
-         {
-          ["nama person", "kelompok", "jenis kelamin"]
+        try {
+          const personData = await parseMessageToJSON(
+            //originalBody,
+            instructionOption.registerInstruction,
+          );
+          console.log("log:\nparsed person data:", personData);
+          const fromAppScript = await sendToAppScript(
+            personData,
+            appScriptInstruction.register,
+          );
+          if (fromAppScript) {
+            console.log("[LOG]: Person sudah ditambahkan");
+            message.reply("Person sudah ditambahkan");
           }
-          */
+        } catch (error) {
+          console.error("[LOG] Error register person:\n", error.message);
+        }
+
         break;
       case "tambah":
         /* kirim ke genai untuk parse data jadi json seperti ini:
