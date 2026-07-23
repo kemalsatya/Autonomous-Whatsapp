@@ -15,7 +15,7 @@ export const processInitiateProject = async (pesanMasuk) => {
                               values (${projectData.client}, ${projectData.project}, ${projectData.spreadsheet_id})
                               `;
     if (insertToDb) {
-      console.log("[LOG] Process Initiate Spreadsheet Project Success");
+      console.log("[LOG] Initiate Spreadsheet Project to NeonDb Success");
     }
     const dataReturn = { status: true, data: projectData };
     return dataReturn;
