@@ -2,6 +2,7 @@ import "dotenv/config";
 export const appScriptInstruction = {
   initiate: "initiate",
   register: "register",
+  attendance: "attendance",
 };
 
 export const sendToAppScript = async (data, _instruksi) => {
