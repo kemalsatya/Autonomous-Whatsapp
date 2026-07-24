@@ -7,7 +7,11 @@ import {
   sendToAppScript,
 } from "#@/appscript/app_script.service.js";
 import { instructionOption } from "#@/ai-parser/ai.prompt.js";
-import { parseMessageToJSON } from "#@/ai-parser/ai.service.js";
+import {
+  createCustomResponse,
+  parseMessageToJSON,
+} from "#@/ai-parser/ai.service.js";
+import { schemas } from "#@/ai-parser/ai.response.schema.js";
 
 export const registerMessageHandler = () => {
   client.on("message_create", async (message) => {
@@ -34,11 +38,13 @@ export const registerMessageHandler = () => {
               appScriptInstruction.initiate,
             );
             if (fromAppScript) {
-              message.reply(`Initiate Project Success
+              message.reply(
+                `Initiate Project Success
   success: true
   client: ${data.client}
   project: ${data.project},
-  ss id: ${data.spreadsheet_id}`);
+  ss id: ${data.spreadsheet_id}`,
+              );
             }
           } catch (error) {
             message.reply(`Initiate Project Fail`);
@@ -53,11 +59,16 @@ export const registerMessageHandler = () => {
         break;
       case "daftar":
         try {
-          const personData = await parseMessageToJSON(
-            //originalBody,
-            instructionOption.registerInstruction,
+          const customRegisterSchema = createCustomResponse(
+            "registerSchema",
+            schemas.registerSchema,
           );
-          console.log("log:\nparsed person data:", personData);
+          const personData = await parseMessageToJSON(
+            originalBody,
+            instructionOption.registerInstruction,
+            customRegisterSchema,
+          );
+          console.log("[LOG]parsed person data:", personData);
           const fromAppScript = await sendToAppScript(
             personData,
             appScriptInstruction.register,
@@ -72,11 +83,30 @@ export const registerMessageHandler = () => {
 
         break;
       case "tambah":
-        /* kirim ke genai untuk parse data jadi json seperti ini:
-           {
-            ["nama person", "hadir/ijin/sakit/absen"]
-            }
-            */
+        try {
+          const customAttendanceSchema = createCustomResponse(
+            "attendanceSchema",
+            schemas.attendanceSchema,
+            "medium",
+          );
+          const attendanceData = await parseMessageToJSON(
+            originalBody,
+            instructionOption.insertAttendanceInstruction,
+            customAttendanceSchema,
+          );
+          console.log("[LOG] parsed person attendance data:", attendanceData);
+          const fromAppScript = await sendToAppScript(
+            attendanceData,
+            appScriptInstruction.attendance,
+          );
+          if (fromAppScript) {
+            console.log("[LOG] data kehadiran berhasil ditambahkan");
+            message.reply("Data kehadiran berhasil ditambahkan");
+          }
+        } catch (error) {
+          console.log("[LOG] Error di case tambah:\n", error.message);
+          message.reply(`Terdapat kesalahan:\n${error.message}`);
+        }
         break;
       case "pindah":
         /* kirim ke genai untuk parse data jadi json seperti ini:
@@ -102,3 +132,12 @@ export const registerMessageHandler = () => {
 
   client.on("disconnected", (reason) => console.log(reason));
 };
+
+/**
+
+assalamualaikum, ini mas kemal dapat info perkuliahan mas kemal
+dari pdf ini, informasi singkatnya:
+- Pembayaran UKT  = 22 Juli - 3 Agustus
+- Mulai Perkuliahan = 18 Agustus 
+
+ */
