@@ -1,17 +1,11 @@
 import { client } from "./whatsapp.client.js";
-import { helpReplyText } from "./text.helper.js";
-import { processInitiateProject } from "./whatsapp.service.js";
-import { initializeNeonDb } from "#@/neondb/neondb.client.js";
+import { helpReplyText, tempInstructions } from "./text.helper.js";
 import {
   appScriptInstruction,
   sendToAppScript,
 } from "#@/appscript/app_script.service.js";
 import { instructionOption } from "#@/ai-parser/ai.prompt.js";
-import {
-  createCustomResponse,
-  parseMessageToJSON,
-} from "#@/ai-parser/ai.service.js";
-import { schemas } from "#@/ai-parser/ai.response.schema.js";
+import { parseMessageToJSON } from "#@/ai-parser/ai.service.js";
 
 export const registerMessageHandler = () => {
   client.on("message_create", async (message) => {
@@ -23,76 +17,47 @@ export const registerMessageHandler = () => {
     const messageInstruction = messageBody.split(/\s+/)[0];
 
     switch (messageInstruction) {
-      case "help":
+      case "!help":
         message.reply(helpReplyText);
         break;
-      case "inisiasi":
-        initializeNeonDb();
-        const { status, data } = await processInitiateProject(originalBody);
-
-        const isDoc = messageBody.includes("doc");
-        if (isDoc) {
-          try {
-            const fromAppScript = await sendToAppScript(
-              data,
-              appScriptInstruction.initiate,
-            );
-            if (fromAppScript) {
-              message.reply(
-                `Initiate Project Success
-  success: true
-  client: ${data.client}
-  project: ${data.project},
-  ss id: ${data.spreadsheet_id}`,
-              );
-            }
-          } catch (error) {
-            message.reply(`Initiate Project Fail`);
-            console.error("[LOG] Error inisiasi:\n", error.message);
-          }
-        }
-
-        if (status && !isDoc) {
-          console.log("[LOG] Initiate Project Success");
-          message.reply("Initiate Success");
+      case "!template":
+        const tempInstruction = messageBody.split(/\s+/)[1];
+        switch (tempInstruction) {
+          case "!daftar":
+            message.reply(tempInstructions.tempRegisterInstructions);
+            break;
+          case "!tambah":
+            message.reply(tempInstructions.tempAttendanceInstructions);
+            break;
+          case "!pindah":
+            message.reply(tempInstructions.tempMovingInstructions);
+            break;
         }
         break;
-      case "daftar":
+      case "!daftar":
         try {
-          const customRegisterSchema = createCustomResponse(
-            "registerSchema",
-            schemas.registerSchema,
-          );
           const personData = await parseMessageToJSON(
             originalBody,
             instructionOption.registerInstruction,
-            customRegisterSchema,
           );
-          console.log("[LOG]parsed person data:", personData);
+          console.log("[LOG] parsed person data:", personData);
           const fromAppScript = await sendToAppScript(
             personData,
             appScriptInstruction.register,
           );
           if (fromAppScript) {
-            console.log("[LOG]: Person sudah ditambahkan");
+            console.log("[LOG] Person sudah ditambahkan");
             message.reply("Person sudah ditambahkan");
           }
         } catch (error) {
           console.error("[LOG] Error register person:\n", error.message);
         }
-
         break;
-      case "tambah":
+      case "!tambah":
         try {
-          const customAttendanceSchema = createCustomResponse(
-            "attendanceSchema",
-            schemas.attendanceSchema,
-            "medium",
-          );
           const attendanceData = await parseMessageToJSON(
             originalBody,
             instructionOption.insertAttendanceInstruction,
-            customAttendanceSchema,
           );
           console.log("[LOG] parsed person attendance data:", attendanceData);
           const fromAppScript = await sendToAppScript(
@@ -108,21 +73,30 @@ export const registerMessageHandler = () => {
           message.reply(`Terdapat kesalahan:\n${error.message}`);
         }
         break;
-      case "pindah":
-        /* kirim ke genai untuk parse data jadi json seperti ini:
-             {
-              ["nama person"]
-              }
-              */
+      case "!pindah":
+        try {
+          const dataMovedPerson = await parseMessageToJSON(
+            messageBody,
+            instructionOption.movedPersonInstruction,
+          );
+          console.log("[LOG] data moved person: ", dataMovedPerson);
+          const fromAppScript = await sendToAppScript(
+            dataMovedPerson,
+            appScriptInstruction.moving,
+          );
+          if (fromAppScript) {
+            console.log("[LOG] data person yang pindah selesai dihapus");
+            message.reply("Data kepindahan person sudah ditangani");
+          }
+        } catch (error) {
+          console.log("[LOG] Error di case pindah:\n", error.message);
+          message.reply(`Terdapat kesalahan:\n${error.message}`);
+        }
         break;
-      case "logout":
+      case "!logout":
         await message.reply("Logging out...");
         await client.logout();
         break;
-      // case "hapus":
-      //  break;
-      // case "laporan":
-      //  break;
       default:
         break;
     }
@@ -132,12 +106,3 @@ export const registerMessageHandler = () => {
 
   client.on("disconnected", (reason) => console.log(reason));
 };
-
-/**
-
-assalamualaikum, ini mas kemal dapat info perkuliahan mas kemal
-dari pdf ini, informasi singkatnya:
-- Pembayaran UKT  = 22 Juli - 3 Agustus
-- Mulai Perkuliahan = 18 Agustus 
-
- */
