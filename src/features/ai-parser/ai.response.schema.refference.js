@@ -20,21 +20,6 @@ const initiateSchema = {
   additionalProperties: false,
 };
 
-const registerSchema = {
-  type: "object",
-  properties: {
-    nama: { type: ["string", "null"], description: "Name in Pascal Case" },
-    kelompok: {
-      type: ["string", "null"],
-      description: "Group (TMII 1, TMII 2, G1, G2)",
-    },
-    jenis_kelamin: { type: ["string", "null"], description: "Gender (L or P)" },
-  },
-  required: ["nama", "kelompok", "jenis_kelamin"],
-  additionalProperties: false,
-};
-
-// Reusable schema for a single person in the attendance array
 const personSchema = {
   type: "object",
   properties: {
@@ -42,6 +27,16 @@ const personSchema = {
     kelompok: { type: "string" },
   },
   required: ["nama", "kelompok"],
+  additionalProperties: false,
+};
+
+const registerSchema = {
+  type: "object",
+  properties: {
+    l: { type: "array", items: personSchema },
+    p: { type: "array", items: personSchema },
+  },
+  required: ["l", "p"],
   additionalProperties: false,
 };
 
@@ -72,4 +67,25 @@ const attendanceSchema = {
   additionalProperties: false,
 };
 
-export const schemas = { initiateSchema, registerSchema, attendanceSchema };
+const movedPersonSchema = {
+  type: "object",
+  properties: {
+    l: {
+      type: "array",
+      items: personSchema,
+    },
+    p: {
+      type: "array",
+      items: personSchema,
+    },
+  },
+  required: ["l", "p"],
+  additionalProperties: false,
+};
+
+export const schemas = {
+  initiateSchema,
+  registerSchema,
+  attendanceSchema,
+  movedPersonSchema,
+};
