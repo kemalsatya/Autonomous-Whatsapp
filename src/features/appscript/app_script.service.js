@@ -18,7 +18,7 @@ export const sendToAppScript = async (data, _instruksi) => {
   });
 
   if (!response.ok) {
-    console.log(response.message);
+    console.log(response);
     throw new Error(`[LOG] HTTP error, status: ${response.status}`);
   }
 

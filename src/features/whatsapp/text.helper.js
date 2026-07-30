@@ -13,14 +13,14 @@ data:
 !pindah     -- nama person, kelompok (saat masih di Jatiwaringin)
 `;
 
-const tempRegisterInstructions = `*Format Pendaftaran:* __hapus line di atas !instruksi__
+const tempRegisterInstructions = `*Format Pendaftaran:* __hapus baris ini__
 !daftar
 laki-laki
 - [nama] [kelompok]
 
 perempuan
 - [nama] [kelompok]`;
-const tempAttendanceInstructions = `*Format Kehadiran:* __hapus line di atas !instruksi__
+const tempAttendanceInstructions = `*Format Kehadiran:* __hapus baris ini__
 !tambah
 tanggal [angka]
 [hadir/izin/absen/sakit]
@@ -31,7 +31,7 @@ laki-laki
 perempuan
 - [nama] [kelompok]`;
 
-const tempMovingInstructions = `*Format Pindah:* __hapus line di atas !instruksi__
+const tempMovingInstructions = `*Format Pindah:* __hapus baris ini__
 !pindah
 laki-laki
 - [nama] [kelompok]
