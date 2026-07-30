@@ -5,10 +5,17 @@ import { customSystemInstruction } from "./ai.prompt.js";
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export const parseMessageToJSON = async (pesanMasuk, _instruksi, _custom) => {
-  let modelUsed = "llama-3.1-8b-instant";
-  if (_custom.model == "medium") {
-    modelUsed = "openai/gpt-oss-20b";
+  let modelUsed = "llama-3.3-70b-versatile";
+  // let modelUsed = "openai/gpt-oss-20b";
+  let Response_formatUsed = { type: "json_object" };
+
+  if (_custom && _custom.model == "medium") {
+    Response_formatUsed = {
+      type: "json_schema",
+      json_schema: _custom.customSchema,
+    };
   }
+
   try {
     const completion = await groq.chat.completions.create({
       messages: [
@@ -23,10 +30,7 @@ export const parseMessageToJSON = async (pesanMasuk, _instruksi, _custom) => {
       ],
       model: modelUsed,
       temperature: 0,
-      response_format: {
-        type: "json_schema",
-        json_schema: _custom.customSchema,
-      },
+      response_format: Response_formatUsed,
     });
 
     const rawResponse = completion.choices[0].message.content;
@@ -56,18 +60,3 @@ export const initializeAiParserService = async () => {
   }
 };
 
-/**
- * @param {string} response_name
- * @param {object} response_schema -> schemas from ai.resposne.schema.js
- * @param {string} (optional) model -> "medium"
- */
-export const createCustomResponse = (response_name, response_schema, model) => {
-  return {
-    model,
-    customSchema: {
-      name: response_name,
-      schema: response_schema,
-      strict: true,
-    },
-  };
-};

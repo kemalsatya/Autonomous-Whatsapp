@@ -21,7 +21,7 @@ jobs:
           cache: "npm"
 
       - name: Install Dependencies
-        run: npm ci
+        run: npm install
 
       - name: Run Strict ESLint
         # Menjalankan Linter dengan meng-override (menimpa) aturan agar lebih ketat (error mutlak pada unused-vars)

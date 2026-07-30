@@ -1,8 +1,8 @@
 import "dotenv/config";
 export const appScriptInstruction = {
-  initiate: "initiate",
   register: "register",
   attendance: "attendance",
+  moving: "moving",
 };
 
 export const sendToAppScript = async (data, _instruksi) => {
@@ -18,6 +18,7 @@ export const sendToAppScript = async (data, _instruksi) => {
   });
 
   if (!response.ok) {
+    console.log(response.message);
     throw new Error(`[LOG] HTTP error, status: ${response.status}`);
   }
 
