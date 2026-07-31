@@ -4,15 +4,12 @@ import {
   processRegister,
   processAttendance,
   processMoving,
+  executeWithDelay,
 } from "./whatsapp.service.js";
+import { limiter } from "#@/taskQueue/index.js";
 
 // Helper function untuk merutekan pesan agar DRY (bisa dipakai create & edit)
 const routeMessage = async (message) => {
-  // Hanya memproses pesan dari nomor bot sendiri
-  if (!message.fromMe) {
-    return;
-  }
-
   const originalBody = message.body.trim();
   const messageBody = originalBody.toLowerCase();
   const messageInstruction = messageBody.split(/\s+/)[0];
@@ -38,15 +35,40 @@ const routeMessage = async (message) => {
       break;
 
     case "!daftar":
-      await processRegister(message, originalBody);
+      // await processRegister(message, originalBody);
+      limiter
+        // .schedule(() => processRegister(message, originalBody))
+        .schedule(() =>
+          executeWithDelay(processRegister, message, originalBody),
+        )
+        .catch((error) => {
+          console.error("[LOG] Gagal memproses daftar setelah retry:\n", error.message);
+          message.reply(`Maaf, gagal menambahkan data pendaftaran setelah beberapa kali percobaan.\nDetail: ${error.message}`);
+        });
       break;
 
     case "!tambah":
-      await processAttendance(message, originalBody);
+      // await processAttendance(message, originalBody);
+      limiter
+        // .schedule(() => processAttendance(message, originalBody))
+        .schedule(() =>
+          executeWithDelay(processAttendance, message, originalBody),
+        )
+        .catch((error) => {
+          console.error("[LOG] Gagal memproses tambah setelah retry:\n", error.message);
+          message.reply(`Maaf, gagal merekam data kehadiran setelah beberapa kali percobaan.\nDetail: ${error.message}`);
+        });
       break;
 
     case "!pindah":
-      await processMoving(message, originalBody);
+      // await processMoving(message, originalBody);
+      limiter
+        // .schedule(() => processMoving(message, originalBody))
+        .schedule(() => executeWithDelay(processMoving, message, originalBody))
+        .catch((error) => {
+          console.error("[LOG] Gagal memproses pindah setelah retry:\n", error.message);
+          message.reply(`Maaf, gagal memproses data kepindahan setelah beberapa kali percobaan.\nDetail: ${error.message}`);
+        });
       break;
 
     case "!logout":
@@ -61,10 +83,17 @@ const routeMessage = async (message) => {
 
 export const registerMessageHandler = () => {
   client.on("message_create", async (message) => {
+    if (!message.fromMe) {
+      return;
+    }
     await routeMessage(message);
   });
 
   client.on("message_edit", async (message, newBody, prevBody) => {
+    if (!message.fromMe) {
+      return;
+    }
+
     if (newBody) {
       message.body = newBody;
     }

@@ -6,13 +6,12 @@ Rules:
 - "nama" is always Pascal Case with space between words. Extract ONLY the person's name. DO NOT include the group/kelompok in the "nama" field.
 - "kelompok" MUST be one of: ["TMII 1", "TMII 2", "G1", "G2"] (map "taman mini"/tm to TMII, and "gamprit"/g to G).
 - "l" is (gender for laki-laki/men), and "p" is (gender for perempuan/women).
-- Pay close attention to gender headers ('perempuan', 'laki-laki'). categorize all the names strictly into the correct gender array. 
+- Pay close attention to gender headers ('perempuan', 'laki-laki'). categorize all the names strictly into the correct gender array. If gender header is empty, leave empty array for all gender category.
 - DO NOT duplicate names. A person can ONLY be in 'l' OR 'p', never both.
 - If a gender category has no names mentioned, you MUST leave its array empty ([]).
 
 Expected JSON Output Format:
 {"l": [{"nama":"Name","kelompok":"Group"}], "p": [{"nama":"Name","kelompok":"Group"}]}
-
 Return ONLY valid JSON.
 `;
 
@@ -25,18 +24,36 @@ Rules:
 - Categories: "h" = hadir (present), "s" = sakit (sick), "i" = izin (permission), "a" = alpha/absen (absent).
 - "kelompok" MUST be one of: ["TMII 1", "TMII 2", "G1", "G2"] (map "taman mini"/tm to TMII, and "gamprit" to G).
 - IMPORTANT: Pay close attention to the header. If the message starts with a status like "Izin" or "Sakit", categorize ALL listed names under that status ("i" or "s") unless explicitly stated otherwise next to a name.
+- EXCLUSION RULE: You MUST ONLY extract names that are explicitly listed UNDER a status header (hadir/sakit/izin/alfa). If you see names and genders without any preceding status header, YOU MUST COMPLETELY IGNORE THEM. Do NOT default them to "a" (alpha/absen) or any other category. Just discard them.
 
-Example Input:
+Example Input 1:
 tanggal 13
 hadir
 laki-laki
 - man1 g1
+perempuan
+- women1 g1
+
 izin
 perempuan
 - women2 tm2
 
-Example JSON Output:
-{"tanggal":"13","l":{"h":[{"nama":"man1","kelompok":"G1"}],"s":[],"i":[],"a":[]},"p":{"h":[],"s":[],"i":[{"nama":"women2","kelompok":"TMII 2"}],"a":[]}}
+Example JSON Output 1:
+{"tanggal":"13","l":{"h":[{"nama":"man1","kelompok":"G1"}],"s":[],"i":[],"a":[]},"p":{"h":[{"nama":"women1","kelompok":"G1"}],"s":[],"i":[{"nama":"women2","kelompok":"TMII 2"}],"a":[]}}
+
+Example Input 2:
+tanggal 13
+laki-laki
+- man1 g1
+perempuan
+- women1 g1
+
+izin
+perempuan
+- women2 tm2
+
+Example JSON Output 2:
+{"tanggal":"13","l":{"h":[],"s":[],"i":[],"a":[]},"p":{"h":[],"s":[],"i":[{"nama":"women2","kelompok":"TMII 2"}],"a":[]}}
 `;
 
 const movedPersonInstruction = `
@@ -45,7 +62,7 @@ Rules:
 - "nama" is always Pascal Case with space between words. Extract ONLY the person's name. DO NOT include the group/kelompok in the "nama" field.
 - "kelompok" MUST be one of: ["TMII 1", "TMII 2", "G1", "G2"] (map "taman mini"/tm to TMII, and "gamprit" to G).
 - "l" is (laki-laki/men), and "p" is (perempuan/women).
-- Pay close attention to gender headers (e.g., 'perempuan', 'laki-laki'). Categorize the names strictly into the correct gender array.
+- Pay close attention to gender headers (e.g., 'perempuan', 'laki-laki'). Categorize the names strictly into the correct gender array. If gender header is empty, leave empty array for all gender category.
 - DO NOT duplicate names. A person can ONLY be in 'l' OR 'p', never both.
 - If a gender category has no names mentioned, you MUST leave its array empty ([]).
 

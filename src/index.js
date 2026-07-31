@@ -3,6 +3,7 @@ import "dotenv/config";
 import { initializeWhatsApp } from "./features/whatsapp/whatsapp.client.js";
 import { registerMessageHandler } from "./features/whatsapp/whatsapp.controller.js";
 import { initializeAiParserService } from "./features/ai-parser/ai.service.js";
+import { pingAppScript } from "#@/appscript/app_script.service.js";
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -21,4 +22,5 @@ app.listen(PORT, () => {
   registerMessageHandler();
   initializeWhatsApp();
   initializeAiParserService();
+  pingAppScript();
 });
