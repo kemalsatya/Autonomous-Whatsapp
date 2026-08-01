@@ -1,4 +1,3 @@
-import "dotenv/config";
 export const appScriptInstruction = {
   ping: "ping",
   register: "register",
