@@ -1,0 +1,29 @@
+name: Pre-Merge to Dev Check
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  lint:
+    name: Strict Linting Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Strict ESLint
+        # Menjalankan Linter dengan meng-override (menimpa) aturan agar lebih ketat (error mutlak pada unused-vars)
+        run: |
+          npx eslint . --rule "no-unused-vars: error"
