@@ -21,7 +21,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependensi (hanya production untuk menghemat RAM dan ukuran image)
-RUN npm install --omit=dev
+RUN HUSKY=0 npm install --omit=dev
 
 # Copy seluruh file project
 COPY . .
