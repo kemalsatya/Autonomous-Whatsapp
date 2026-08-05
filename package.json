@@ -6,7 +6,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "start": "node --env-file=.env src/index.js",
+    "start": "node --env-file-if-exists=.env src/index.js",
     "lint": "eslint .",
     "prepare": "husky"
   },

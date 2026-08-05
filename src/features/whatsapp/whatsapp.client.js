@@ -33,7 +33,7 @@ export const initializeWhatsApp = async () => {
     console.log(qrString);
   });
 
-  client.on("authenticated", () => console.log("[LOG] QR di scan..."));
+  client.on("authenticated", () => console.log("[LOG] QR WhatsApp di scan..."));
 
   client.on("ready", () => console.log("[LOG] WhatsApp service ready to go!"));
 
