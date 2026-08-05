@@ -29,7 +29,7 @@ export const client = new Client({
 
 export const initializeWhatsApp = async () => {
   client.on("qr", async (qr) => {
-    const qrString = await QRCode.toString(qr, { type: "terminal", scale: 1 });
+    const qrString = await QRCode.toString(qr, { type: "terminal", small: true });
     console.log(qrString);
   });
 
