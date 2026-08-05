@@ -1,4 +1,4 @@
-FROM node:24-alpine
+FROM node:22-alpine
 
 # Install Chromium dan dependensinya (dibutuhkan oleh whatsapp-web.js / Puppeteer)
 # Alpine memerlukan Chromium bawaan OS agar berjalan ringan dan kompatibel
