@@ -21,7 +21,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install dependensi (hanya production untuk menghemat RAM dan ukuran image)
-RUN npm ci --no-audit --no-fund && npm prune --production
+RUN npm install --no-audit --no-fund && npm prune --production
 
 # Copy seluruh file project
 COPY . .
