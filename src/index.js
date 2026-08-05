@@ -10,11 +10,8 @@ const app = express();
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.status(200).send({
-    status: "Success",
-    message: "Welcome, Service is Running",
-  });
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
 });
 
 app.listen(PORT, () => {

@@ -14,6 +14,7 @@ RUN apk add --no-cache \
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
+# Mount Volume di dokploy -> /usr/src/app/wa-session
 WORKDIR /usr/src/app
 
 # Copy package.json dan package-lock.json (jika ada)
